@@ -193,3 +193,12 @@ import { addCandidate } from '../application/services/candidateService';
 # `supertest` dev dependencies
 Consider adding "@types/supertest": "^7.2.0", and "supertest": "^7.2.2" to backend `devDependencies`.
 ````
+---
+
+# 10) Code Review Skill
+
+```markdown
+/requesting-code-review Review the latest commits and perform a code review analysis. Propose improvements focusing on clean architecture and backend clean code standards.
+```
+
+Produced @docs/code_review_backend_canidates.result.md

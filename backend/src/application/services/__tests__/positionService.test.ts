@@ -23,25 +23,25 @@ describe('getCandidatesForPosition', () => {
     jest.clearAllMocks();
   });
 
-  it('should throw error for invalid position ID (negative)', async () => {
+  it('should_throw_error_when_position_id_is_negative', async () => {
     await expect(getCandidatesForPosition(-1)).rejects.toThrow('Invalid position ID');
   });
 
-  it('should throw error for invalid position ID (zero)', async () => {
+  it('should_throw_error_when_position_id_is_zero', async () => {
     await expect(getCandidatesForPosition(0)).rejects.toThrow('Invalid position ID');
   });
 
-  it('should throw error for invalid position ID (NaN)', async () => {
+  it('should_throw_error_when_position_id_is_not_a_number', async () => {
     await expect(getCandidatesForPosition(NaN)).rejects.toThrow('Invalid position ID');
   });
 
-  it('should throw error when position not found', async () => {
+  it('should_throw_error_when_position_is_not_found', async () => {
     mockFindUnique.mockResolvedValue(null);
 
     await expect(getCandidatesForPosition(999)).rejects.toThrow('Position not found');
   });
 
-  it('should return empty array when position has no applications', async () => {
+  it('should_return_empty_array_when_position_has_no_applications', async () => {
     mockFindUnique.mockResolvedValue({
       id: 1,
       companyId: 1,
@@ -82,7 +82,7 @@ describe('getCandidatesForPosition', () => {
     });
   });
 
-  it('should return candidates with correct data and average scores', async () => {
+  it('should_return_candidates_with_correct_data_and_average_scores', async () => {
     mockFindUnique.mockResolvedValue({
       id: 1,
       companyId: 1,
@@ -157,7 +157,7 @@ describe('getCandidatesForPosition', () => {
     });
   });
 
-  it('should return null averageScore when candidate has no valid scores', async () => {
+  it('should_return_null_average_score_when_candidate_has_no_valid_scores', async () => {
     mockFindUnique.mockResolvedValue({
       id: 1,
       companyId: 1,
@@ -196,7 +196,7 @@ describe('getCandidatesForPosition', () => {
     expect(result[0].averageScore).toBeNull();
   });
 
-  it('should return null averageScore when candidate has no interviews', async () => {
+  it('should_return_null_average_score_when_candidate_has_no_interviews', async () => {
     mockFindUnique.mockResolvedValue({
       id: 1,
       companyId: 1,
@@ -232,7 +232,7 @@ describe('getCandidatesForPosition', () => {
     expect(result[0].averageScore).toBeNull();
   });
 
-  it('should handle null currentInterviewStep', async () => {
+  it('should_return_null_current_interview_step_when_application_has_no_step', async () => {
     mockFindUnique.mockResolvedValue({
       id: 1,
       companyId: 1,
@@ -268,7 +268,7 @@ describe('getCandidatesForPosition', () => {
     expect(result[0].currentInterviewStep).toBeNull();
   });
 
-  it('should handle database errors', async () => {
+  it('should_propagate_error_when_database_throws', async () => {
     const dbError = new Error('Database connection failed');
     mockFindUnique.mockRejectedValue(dbError);
 

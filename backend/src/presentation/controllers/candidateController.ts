@@ -87,5 +87,3 @@ export const updateCandidateStageController = async (
         res.status(500).json({ error: 'Internal Server Error' });
     }
 };
-
-export { addCandidate };

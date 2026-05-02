@@ -189,7 +189,6 @@ import { addCandidate } from '../application/services/candidateService';
 
 // All the TESTS go here
 ```
-
 # `supertest` dev dependencies
 Consider adding "@types/supertest": "^7.2.0", and "supertest": "^7.2.2" to backend `devDependencies`.
 ````
@@ -202,3 +201,11 @@ Consider adding "@types/supertest": "^7.2.0", and "supertest": "^7.2.2" to backe
 ```
 
 Produced @docs/code_review_backend_canidates.result.md
+
+---
+
+# 11) Fix code reviewer findings
+
+```markdown
+Proceed fixing the findings from @docs/code_review_backend_candidates.result.md.
+```

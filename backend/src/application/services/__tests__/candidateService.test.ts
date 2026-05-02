@@ -61,37 +61,13 @@ describe('updateCandidateStage', () => {
     jest.clearAllMocks();
   });
 
-  it('should throw error for invalid candidate ID (negative)', async () => {
-    await expect(updateCandidateStage(-1, 1)).rejects.toThrow('Invalid candidate ID');
-  });
-
-  it('should throw error for invalid candidate ID (zero)', async () => {
-    await expect(updateCandidateStage(0, 1)).rejects.toThrow('Invalid candidate ID');
-  });
-
-  it('should throw error for invalid candidate ID (NaN)', async () => {
-    await expect(updateCandidateStage(NaN, 1)).rejects.toThrow('Invalid candidate ID');
-  });
-
-  it('should throw error for invalid interview step ID (negative)', async () => {
-    await expect(updateCandidateStage(1, -1)).rejects.toThrow('Invalid interview step ID');
-  });
-
-  it('should throw error for invalid interview step ID (zero)', async () => {
-    await expect(updateCandidateStage(1, 0)).rejects.toThrow('Invalid interview step ID');
-  });
-
-  it('should throw error for invalid interview step ID (NaN)', async () => {
-    await expect(updateCandidateStage(1, NaN)).rejects.toThrow('Invalid interview step ID');
-  });
-
-  it('should throw error when candidate not found', async () => {
+  it('should_throw_error_when_candidate_is_not_found', async () => {
     mockCandidateFindUnique.mockResolvedValue(null);
 
     await expect(updateCandidateStage(999, 1)).rejects.toThrow('Candidate not found');
   });
 
-  it('should throw error when interview step not found', async () => {
+  it('should_throw_error_when_interview_step_is_not_found', async () => {
     mockCandidateFindUnique.mockResolvedValue({
       id: 1,
       firstName: 'John',
@@ -103,7 +79,7 @@ describe('updateCandidateStage', () => {
     await expect(updateCandidateStage(1, 999)).rejects.toThrow('Interview step not found');
   });
 
-  it('should throw error when candidate has no applications', async () => {
+  it('should_throw_error_when_candidate_has_no_applications', async () => {
     mockCandidateFindUnique.mockResolvedValue({
       id: 1,
       firstName: 'John',
@@ -120,7 +96,7 @@ describe('updateCandidateStage', () => {
     await expect(updateCandidateStage(1, 5)).rejects.toThrow('Candidate has no applications');
   });
 
-  it('should update all applications for the candidate', async () => {
+  it('should_update_all_applications_when_candidate_has_multiple_applications', async () => {
     mockCandidateFindUnique.mockResolvedValue({
       id: 1,
       firstName: 'John',
@@ -153,7 +129,7 @@ describe('updateCandidateStage', () => {
     });
   });
 
-  it('should update a single application for the candidate', async () => {
+  it('should_update_a_single_application_when_candidate_has_one_application', async () => {
     mockCandidateFindUnique.mockResolvedValue({
       id: 1,
       firstName: 'John',
@@ -182,7 +158,7 @@ describe('updateCandidateStage', () => {
     });
   });
 
-  it('should handle database errors', async () => {
+  it('should_propagate_error_when_database_throws', async () => {
     const dbError = new Error('Database connection failed');
     mockCandidateFindUnique.mockRejectedValue(dbError);
 

@@ -21,7 +21,7 @@ describe('getCandidatesForPositionController', () => {
     jest.clearAllMocks();
   });
 
-  it('should return 400 for invalid position ID (negative)', async () => {
+  it('should_return_400_when_position_id_is_negative', async () => {
     mockReq = { params: { id: '-1' } };
 
     await getCandidatesForPositionController(mockReq as Request, mockRes as Response);
@@ -30,7 +30,7 @@ describe('getCandidatesForPositionController', () => {
     expect(jsonMock).toHaveBeenCalledWith({ error: 'Invalid position ID' });
   });
 
-  it('should return 400 for invalid position ID (zero)', async () => {
+  it('should_return_400_when_position_id_is_zero', async () => {
     mockReq = { params: { id: '0' } };
 
     await getCandidatesForPositionController(mockReq as Request, mockRes as Response);
@@ -39,7 +39,7 @@ describe('getCandidatesForPositionController', () => {
     expect(jsonMock).toHaveBeenCalledWith({ error: 'Invalid position ID' });
   });
 
-  it('should return 400 for invalid position ID (NaN)', async () => {
+  it('should_return_400_when_position_id_is_not_a_number', async () => {
     mockReq = { params: { id: 'abc' } };
 
     await getCandidatesForPositionController(mockReq as Request, mockRes as Response);
@@ -48,7 +48,7 @@ describe('getCandidatesForPositionController', () => {
     expect(jsonMock).toHaveBeenCalledWith({ error: 'Invalid position ID' });
   });
 
-  it('should return 404 when position not found', async () => {
+  it('should_return_404_when_position_is_not_found', async () => {
     const { getCandidatesForPosition } = require('../../../application/services/positionService');
     getCandidatesForPosition.mockRejectedValue(new Error('Position not found'));
 
@@ -60,7 +60,7 @@ describe('getCandidatesForPositionController', () => {
     expect(jsonMock).toHaveBeenCalledWith({ error: 'Position not found' });
   });
 
-  it('should return 200 with candidates when successful', async () => {
+  it('should_return_200_with_candidates_when_successful', async () => {
     const { getCandidatesForPosition } = require('../../../application/services/positionService');
     const mockCandidates = [
       {
@@ -83,7 +83,7 @@ describe('getCandidatesForPositionController', () => {
     expect(jsonMock).toHaveBeenCalledWith(mockCandidates);
   });
 
-  it('should return 500 for internal server errors', async () => {
+  it('should_return_500_when_an_unexpected_error_occurs', async () => {
     const { getCandidatesForPosition } = require('../../../application/services/positionService');
     getCandidatesForPosition.mockRejectedValue(new Error('Database error'));
 
@@ -92,13 +92,10 @@ describe('getCandidatesForPositionController', () => {
     await getCandidatesForPositionController(mockReq as Request, mockRes as Response);
 
     expect(statusMock).toHaveBeenCalledWith(500);
-    expect(jsonMock).toHaveBeenCalledWith({
-      error: 'Internal Server Error',
-      message: 'Database error'
-    });
+    expect(jsonMock).toHaveBeenCalledWith({ error: 'Internal Server Error' });
   });
 
-  it('should return 500 for non-Error exceptions', async () => {
+  it('should_return_500_when_a_non_error_exception_is_thrown', async () => {
     const { getCandidatesForPosition } = require('../../../application/services/positionService');
     getCandidatesForPosition.mockRejectedValue('Unknown error');
 

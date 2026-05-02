@@ -62,7 +62,7 @@ describe('PUT /candidates/:id/stage', () => {
     app.use('/candidates', candidateRoutes);
   });
 
-  it('should return 200 when update successful', async () => {
+  it('should_return_200_when_update_is_successful', async () => {
     mockCandidateFindUnique.mockResolvedValue({
       id: 1,
       firstName: 'John',
@@ -92,7 +92,7 @@ describe('PUT /candidates/:id/stage', () => {
     });
   });
 
-  it('should return 400 when invalid candidate id format - non-numeric', async () => {
+  it('should_return_400_when_candidate_id_is_not_a_number', async () => {
     const response = await request(app)
       .put('/candidates/abc/stage')
       .send({ currentInterviewStep: 5 })
@@ -102,7 +102,7 @@ describe('PUT /candidates/:id/stage', () => {
     expect(response.body).toHaveProperty('error');
   });
 
-  it('should return 400 when invalid candidate id format - negative', async () => {
+  it('should_return_400_when_candidate_id_is_negative', async () => {
     const response = await request(app)
       .put('/candidates/-1/stage')
       .send({ currentInterviewStep: 5 })
@@ -112,7 +112,7 @@ describe('PUT /candidates/:id/stage', () => {
     expect(response.body).toHaveProperty('error');
   });
 
-  it('should return 400 when invalid candidate id format - zero', async () => {
+  it('should_return_400_when_candidate_id_is_zero', async () => {
     const response = await request(app)
       .put('/candidates/0/stage')
       .send({ currentInterviewStep: 5 })
@@ -122,7 +122,7 @@ describe('PUT /candidates/:id/stage', () => {
     expect(response.body).toHaveProperty('error');
   });
 
-  it('should return 400 when invalid interview step - undefined', async () => {
+  it('should_return_400_when_interview_step_is_missing', async () => {
     const response = await request(app)
       .put('/candidates/1/stage')
       .send({})
@@ -132,7 +132,7 @@ describe('PUT /candidates/:id/stage', () => {
     expect(response.body).toHaveProperty('error');
   });
 
-  it('should return 400 when invalid interview step - null', async () => {
+  it('should_return_400_when_interview_step_is_null', async () => {
     const response = await request(app)
       .put('/candidates/1/stage')
       .send({ currentInterviewStep: null })
@@ -142,7 +142,7 @@ describe('PUT /candidates/:id/stage', () => {
     expect(response.body).toHaveProperty('error');
   });
 
-  it('should return 400 when invalid interview step - string', async () => {
+  it('should_return_400_when_interview_step_is_a_string', async () => {
     const response = await request(app)
       .put('/candidates/1/stage')
       .send({ currentInterviewStep: 'abc' })
@@ -152,7 +152,7 @@ describe('PUT /candidates/:id/stage', () => {
     expect(response.body).toHaveProperty('error');
   });
 
-  it('should return 400 when invalid interview step - negative', async () => {
+  it('should_return_400_when_interview_step_is_negative', async () => {
     const response = await request(app)
       .put('/candidates/1/stage')
       .send({ currentInterviewStep: -1 })
@@ -162,7 +162,7 @@ describe('PUT /candidates/:id/stage', () => {
     expect(response.body).toHaveProperty('error');
   });
 
-  it('should return 400 when invalid interview step - zero', async () => {
+  it('should_return_400_when_interview_step_is_zero', async () => {
     const response = await request(app)
       .put('/candidates/1/stage')
       .send({ currentInterviewStep: 0 })
@@ -172,7 +172,7 @@ describe('PUT /candidates/:id/stage', () => {
     expect(response.body).toHaveProperty('error');
   });
 
-  it('should return 404 when candidate not found', async () => {
+  it('should_return_404_when_candidate_is_not_found', async () => {
     mockCandidateFindUnique.mockResolvedValue(null);
 
     const response = await request(app)
@@ -184,7 +184,7 @@ describe('PUT /candidates/:id/stage', () => {
     expect(response.body).toEqual({ error: 'Candidate not found' });
   });
 
-  it('should return 404 when interview step not found', async () => {
+  it('should_return_404_when_interview_step_is_not_found', async () => {
     mockCandidateFindUnique.mockResolvedValue({
       id: 1,
       firstName: 'John',
@@ -202,7 +202,7 @@ describe('PUT /candidates/:id/stage', () => {
     expect(response.body).toEqual({ error: 'Interview step not found' });
   });
 
-  it('should return 400 when candidate has no applications', async () => {
+  it('should_return_400_when_candidate_has_no_applications', async () => {
     mockCandidateFindUnique.mockResolvedValue({
       id: 1,
       firstName: 'John',
@@ -225,7 +225,7 @@ describe('PUT /candidates/:id/stage', () => {
     expect(response.body).toEqual({ error: 'Candidate has no applications' });
   });
 
-  it('should return 500 when unexpected error occurs', async () => {
+  it('should_return_500_when_an_unexpected_error_occurs', async () => {
     mockCandidateFindUnique.mockRejectedValue(new Error('Database connection failed'));
 
     const response = await request(app)

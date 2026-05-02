@@ -1,3 +1,14 @@
+# 1) Document data model using skill
+
+```markdown
+/document-data-model Document the backend data model in a new markdown file named docs/data-model.md, containing embedded ERD diagrams using Mermaid.
+```
+
+---
+
+# 2) Produce the implementation plans for the two new endpoints
+
+````markdown
 # Role
 Backend developer familiar with the existing codebase architecture, patterns, and conventions.
 
@@ -34,8 +45,19 @@ The agent must inspect the codebase to understand:
   - `current_interview_step`: the current stage in the process (from the `applications` table)
   - Candidate's average score: mean of the `score` values across all interviews (from the `interviews` table) completed by that candidate
 
+# Resources
+
+Use the data model documentation and any relevant code files to understand the existing structure and provide a consistent implementation plan. Key resources include:
+- `docs/data-model.md` for database schema and relationships
+- `backend/api-spec.yaml` for API specifications and conventions
+- `backend/src/routes` for existing endpoint definitions
+
 # Output format
-Produce a markdown implementation plan that includes:
+Produce **two markdown files** for the implementation plans, one for each endpoint. 
+
+The plans must be split by endpoint, hence we will require two different markdown files, one for each endpoint. Each file should be named according to the endpoint it describes (e.g., `update_candidate_stage.plan.md` and `get_position_candidates.plan.md`).
+
+Each plan file MUST include:
 
 1. **Codebase analysis summary**: Key architectural patterns discovered, relevant files identified
 2. **Implementation approach**: Step-by-step plan for each endpoint including:
@@ -45,6 +67,13 @@ Produce a markdown implementation plan that includes:
 3. **Code snippets**: Example implementations following existing codebase conventions
 4. **Testing considerations**: How to test the new endpoints based on existing patterns
 
-The plan must be actionable for immediate implementation.
+The plan must be actionable for immediate implementation for any coding agent. It should be detailed enough to guide the development process without ambiguity.
+````
 
-The plans must be split by endpoint, hence we will require two different markdown files, one for each endpoint. Each file should be named according to the endpoint it describes (e.g., `update_candidate_stage.plan.md` and `get_position_candidates.plan.md`).
+---
+
+# 3) Request review of the implementation plans
+
+```markdown
+/requesting-code-review Review the implementation plans that have been defined in @docs/get_position_candidates.plan.md  and @docs/update_candidate_stage.plan.md. Adjust them as needed so both plans can be handed over to an AI agent and succeed with the implementation. Use the perspective from the agent @backend-developer following the standards defined in @ai-specs/specs/base-standards.mdc @ai-specs/specs/backend-standards.mdc
+```

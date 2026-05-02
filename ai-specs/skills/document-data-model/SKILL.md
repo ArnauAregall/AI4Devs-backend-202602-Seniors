@@ -35,27 +35,37 @@ If required fields are missing, ask for them before proceeding.
 
 ## Required entity categories
 
-Always derive and include entities from these categories, named appropriately for
-the domain:
+Derive and include entities from the categories below, named appropriately for
+the domain. **Domain-specific entities are always required.** Infrastructure
+entities (marked _conditional_) should be included only when the system has the
+corresponding concern; omit them for single-tenant, non-RBAC, or non-evented
+systems.
+
+### Always include (domain-specific)
 
 | Category | Generic name | Instantiate as |
 |----------|-------------|----------------|
-| Tenant / organisation | `Tenant` | The top-level isolation boundary per customer |
-| Staff user | `User` | Internal actors (staff, admins) |
-| RBAC role definition | `Role` | Named permission set |
-| Role assignment junction | `UserRole` | User-to-role within a tenant |
 | Core domain resource | _(domain-specific)_ | Primary entity the system manages |
 | Sub-resource or published form | _(domain-specific)_ | Derived or published version of the core resource |
 | External party / subject | _(domain-specific)_ | Person or entity acted upon (candidate, applicant, etc.) |
-| External identity mapping | `ExternalIdentity` | IdP user ID mapped to platform user |
-| Entitlement / integration config | _(domain-specific)_ | What a tenant is licensed to use |
 | Assignment / membership junction | _(domain-specific)_ | Links subject to resource |
 | Stage / status history | _(domain-specific)_ | Pipeline stage tracking |
 | Sub-resource (assessment, test, etc.) | _(domain-specific)_ | Secondary workflow entity |
 | Structured feedback | _(domain-specific)_ | Reviewer or interviewer input |
 | Decision record | _(domain-specific)_ | Final outcome of the workflow |
-| Audit log | `AuditLog` | Append-only, with before/after jsonb snapshots |
-| Transactional outbox | `OutboxEvent` | Reliable event publishing via outbox pattern |
+
+### Include when applicable (infrastructure / cross-cutting)
+
+| Category | Generic name | Include when |
+|----------|-------------|--------------|
+| Tenant / organisation | `Tenant` | Multi-tenant system — top-level isolation boundary per customer |
+| Staff user | `User` | System has internal authenticated users (staff, admins) |
+| RBAC role definition | `Role` | System enforces role-based access control |
+| Role assignment junction | `UserRole` | RBAC is present — links User to Role within a Tenant |
+| External identity mapping | `ExternalIdentity` | SSO / external IdP maps to platform users |
+| Entitlement / integration config | _(domain-specific)_ | Tenants have licensed features or integration settings |
+| Audit log | `AuditLog` | Compliance or audit trail required — append-only, with before/after jsonb snapshots |
+| Transactional outbox | `OutboxEvent` | Reliable event publishing required — outbox pattern for async consumers |
 
 ---
 
@@ -102,7 +112,7 @@ A single Mermaid `erDiagram` covering all entities. Rules:
 ## Quality bar
 
 Before outputting, verify:
-- [ ] All required entity categories are covered
+- [ ] All domain-specific entity categories are covered; conditional infrastructure entities are included only when their concern applies
 - [ ] Every entity has id, timestamps, and FKs
 - [ ] Every ERD relationship line has a verb label
 - [ ] Non-obvious design decisions are called out inline

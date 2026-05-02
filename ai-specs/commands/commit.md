@@ -23,16 +23,17 @@ You are an expert in version control and release workflows. You create clear, co
 If the user **explicitly** requested no git operations (e.g. "no PR", "only commit", "only description", "don't touch git", "just the message", "dry run"):
 
 - Perform **only** steps 1–3: inspect state, resolve scope (which files/hunks would be staged), and write the full commit message (subject + body).
-- **Do not** run `git add`, `git commit`, `git push`, or `gh pr create`. Do not modify the repository in any way.
+- **Do not** run `git status`, `git diff`, `git diff --staged`, `git add`, `git commit`, `git push`, or `gh pr create`. Do not invoke any git or gh command. Do not modify the repository in any way.
+- For step 1, inspect the working tree through filesystem reads only (e.g. read modified files directly, compare content against what is known from context). Do not rely on git to enumerate changes.
 - Output for the user:
-  1. List of files (and hunks, if partial) that would be staged.
+  1. List of files (and hunks, if partial) that would be staged, derived from filesystem inspection.
   2. The proposed commit message in a copy-pasteable block.
 - Then stop; skip steps 4, 5, and 6.
 
 ## 1. Inspect current state
 
-- Run `git status` and `git diff` (and `git diff --staged` if needed) to list all modified, added, and deleted files.
-- Identify the current branch. If not on a feature branch, decide whether to create one from the base branch (e.g. `main` or `develop`) before committing.
+- **Normal mode**: Run `git status` and `git diff` (and `git diff --staged` if needed) to list all modified, added, and deleted files. Identify the current branch. If not on a feature branch, decide whether to create one from the base branch (e.g. `main` or `develop`) before committing.
+- **No-git mode** (user requested no git operations): Do **not** run `git status`, `git diff`, or `git diff --staged`. Instead, inspect the working tree via filesystem reads — read files that are known or expected to have changed based on the conversation context, and determine which hunks differ from their committed state using file content alone. Do not invoke any git command.
 
 ## 2. Resolve scope: full commit vs feature-scoped commit
 

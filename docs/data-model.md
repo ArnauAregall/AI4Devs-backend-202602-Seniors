@@ -443,12 +443,12 @@ erDiagram
 |----------|-------|
 | Total Entities | 12 |
 | Primary Keys | 12 (all Int, autoincrement) |
-| Foreign Keys | 19 |
+| Foreign Keys | 14 |
 | Unique Constraints | 3 (Candidate.email, Company.name, Employee.email) |
-| Nullable Fields | 23 |
+| Nullable Fields | 20 |
 | Boolean Fields | 2 (Employee.isActive, Position.isVisible) |
 | DateTime Fields | 8 |
-| Default Values | 4 |
+| Default Values | 3 |
 
 ---
 

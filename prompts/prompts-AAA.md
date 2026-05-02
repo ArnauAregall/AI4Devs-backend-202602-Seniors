@@ -93,3 +93,103 @@ The plan must be actionable for immediate implementation for any coding agent. I
 ```markdown
 /develop-backend @docs/get_position_candidates.plan.md 
 ```
+
+---
+
+# 6) Backend Developer Reviews "Update Candidate Stage" implementation plan
+
+```markdown
+@backend-developer Review implementation plan: @docs/update_candidate_stage.plan.md
+```
+
+---
+
+# 7) Develop "Update Candidate Stage"
+
+```markdown
+/develop-backend @docs/update_candidate_stage.plan.md
+```
+
+---
+
+# 8) Agent steering fix while implementing tests for "Update Candidate Stage"
+
+The Agent got stuck trying to mock `Prisma` clients with `jest` in the new tests. 
+
+opencode config:
+
+```json
+"unsloth/Qwen3.6-27B-GGUF:Q4_K_M": {
+    "name": "Qwen3.6-27B Q4_K_M (Local)",
+    "limit": {
+        "context": 49152,
+        "output": 8192
+    }
+}
+```
+
+````markdown
+# Steering command
+We are half way on the implementation plan for @docs/update_candidate_stage.plan.md. 
+
+We are having problems with the PrismaClient in the new tests. Stop trying to fix them and follow the next steps.
+
+# Test configuration
+
+Consider applying the following similar test setup:
+
+```typescript
+// Prisma mock — must be declared BEFORE any module that imports @prisma/client.
+//
+// We spread jest.requireActual('@prisma/client') into the return value so that
+// the real Prisma namespace (including the real PrismaClientInitializationError
+// class) is preserved.  This is essential: Candidate.save() uses
+// `instanceof Prisma.PrismaClientInitializationError`, and that check only
+// passes when both sides reference the same class object from the real package.
+// ---------------------------------------------------------------------------
+const mockCandidateCreate = jest.fn();
+const mockEducationCreate = jest.fn();
+const mockWorkExperienceCreate = jest.fn();
+const mockResumeCreate = jest.fn();
+
+jest.mock('@prisma/client', () => {
+  const actual = jest.requireActual('@prisma/client');
+
+  const mockPrismaClient = jest.fn().mockImplementation(() => ({
+    candidate: {
+      create: mockCandidateCreate,
+      update: jest.fn(),
+      findUnique: jest.fn(),
+    },
+    education: {
+      create: mockEducationCreate,
+      update: jest.fn(),
+    },
+    workExperience: {
+      create: mockWorkExperienceCreate,
+      update: jest.fn(),
+    },
+    resume: {
+      create: mockResumeCreate,
+    },
+  }));
+
+  return {
+    ...actual,
+    PrismaClient: mockPrismaClient,
+  };
+});
+
+// ---------------------------------------------------------------------------
+// Imports (after all jest.mock calls)
+// ---------------------------------------------------------------------------
+import request from 'supertest';
+import express from 'express';
+import { addCandidate } from '../application/services/candidateService';
+
+// All the TESTS go here
+```
+
+# `supertest` dev dependencies
+Consider adding "@types/supertest": "^7.2.0", and "supertest": "^7.2.2" to backend `devDependencies`.
+````

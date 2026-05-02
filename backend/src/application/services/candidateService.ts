@@ -1,8 +1,12 @@
+import { PrismaClient } from '@prisma/client';
 import { Candidate } from '../../domain/models/Candidate';
 import { validateCandidateData } from '../validator';
 import { Education } from '../../domain/models/Education';
 import { WorkExperience } from '../../domain/models/WorkExperience';
 import { Resume } from '../../domain/models/Resume';
+import { InterviewStep } from '../../domain/models/InterviewStep';
+
+const prisma = new PrismaClient();
 
 export const addCandidate = async (candidateData: any) => {
     try {
@@ -62,4 +66,57 @@ export const findCandidateById = async (id: number): Promise<Candidate | null> =
         console.error('Error al buscar el candidato:', error);
         throw new Error('Error al recuperar el candidato');
     }
+};
+
+export interface UpdateCandidateStageResult {
+    message: string;
+    updatedApplications: number;
+}
+
+export const updateCandidateStage = async (
+    candidateId: number,
+    interviewStepId: number,
+    db: PrismaClient = prisma
+): Promise<UpdateCandidateStageResult> => {
+    if (isNaN(candidateId) || candidateId <= 0) {
+        throw new Error('Invalid candidate ID');
+    }
+
+    if (isNaN(interviewStepId) || interviewStepId <= 0) {
+        throw new Error('Invalid interview step ID');
+    }
+
+    const candidate = await db.candidate.findUnique({
+        where: { id: candidateId }
+    });
+
+    if (!candidate) {
+        throw new Error('Candidate not found');
+    }
+
+    const interviewStep = await db.interviewStep.findUnique({
+        where: { id: interviewStepId }
+    });
+
+    if (!interviewStep) {
+        throw new Error('Interview step not found');
+    }
+
+    const applications = await db.application.findMany({
+        where: { candidateId }
+    });
+
+    if (applications.length === 0) {
+        throw new Error('Candidate has no applications');
+    }
+
+    const result = await db.application.updateMany({
+        where: { candidateId },
+        data: { currentInterviewStep: interviewStepId }
+    });
+
+    return {
+        message: 'Candidate stage updated successfully',
+        updatedApplications: result.count
+    };
 };

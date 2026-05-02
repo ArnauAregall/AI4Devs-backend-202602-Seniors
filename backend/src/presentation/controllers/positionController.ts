@@ -6,9 +6,14 @@ export const getCandidatesForPositionController = async (
   res: Response
 ): Promise<void> => {
   try {
-    const positionId = parseInt(req.params.id);
+    if (!/^\d+$/.test(req.params.id)) {
+      res.status(400).json({ error: 'Invalid position ID' });
+      return;
+    }
 
-    if (isNaN(positionId) || positionId <= 0) {
+    const positionId = parseInt(req.params.id, 10);
+
+    if (positionId <= 0) {
       res.status(400).json({ error: 'Invalid position ID' });
       return;
     }

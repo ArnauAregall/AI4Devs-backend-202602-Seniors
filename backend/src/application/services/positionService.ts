@@ -33,6 +33,7 @@ export const getCandidatesForPosition = async (
   // Get all applications for this position with interviews and candidate data
   const applications = await db.application.findMany({
     where: { positionId },
+    orderBy: { applicationDate: 'desc' },
     include: {
       candidate: {
         select: {

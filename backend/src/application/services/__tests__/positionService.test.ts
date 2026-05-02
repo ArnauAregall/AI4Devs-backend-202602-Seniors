@@ -64,6 +64,7 @@ describe('getCandidatesForPosition', () => {
     });
     expect(mockFindMany).toHaveBeenCalledWith({
       where: { positionId: 1 },
+      orderBy: { applicationDate: 'desc' },
       include: {
         candidate: {
           select: {
@@ -266,6 +267,48 @@ describe('getCandidatesForPosition', () => {
 
     expect(result).toHaveLength(1);
     expect(result[0].currentInterviewStep).toBeNull();
+  });
+
+  it('should_query_applications_ordered_by_application_date_newest_first', async () => {
+    mockFindUnique.mockResolvedValue({
+      id: 1,
+      companyId: 1,
+      interviewFlowId: 1,
+      title: 'Test Position',
+      description: 'Test',
+      status: 'Active',
+      isVisible: true,
+      location: 'Remote',
+      jobDescription: 'Test'
+    });
+
+    // Fixtures intentionally out of order: older app first, newer app second
+    mockFindMany.mockResolvedValue([
+      {
+        id: 2,
+        positionId: 1,
+        candidateId: 2,
+        applicationDate: new Date('2024-01-10T09:00:00Z'),
+        currentInterviewStep: 1,
+        candidate: { id: 2, firstName: 'Older', lastName: 'Applicant', email: 'older@example.com' },
+        interviews: []
+      },
+      {
+        id: 1,
+        positionId: 1,
+        candidateId: 1,
+        applicationDate: new Date('2024-03-20T15:00:00Z'),
+        currentInterviewStep: 2,
+        candidate: { id: 1, firstName: 'Newer', lastName: 'Applicant', email: 'newer@example.com' },
+        interviews: []
+      }
+    ]);
+
+    await getCandidatesForPosition(1);
+
+    expect(mockFindMany).toHaveBeenCalledWith(
+      expect.objectContaining({ orderBy: { applicationDate: 'desc' } })
+    );
   });
 
   it('should_propagate_error_when_database_throws', async () => {

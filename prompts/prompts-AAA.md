@@ -77,3 +77,19 @@ The plan must be actionable for immediate implementation for any coding agent. I
 ```markdown
 /requesting-code-review Review the implementation plans that have been defined in @docs/get_position_candidates.plan.md  and @docs/update_candidate_stage.plan.md. Adjust them as needed so both plans can be handed over to an AI agent and succeed with the implementation. Use the perspective from the agent @backend-developer following the standards defined in @ai-specs/specs/base-standards.mdc @ai-specs/specs/backend-standards.mdc
 ```
+
+---
+
+# 4) Backend Developer Reviews "Get Position Candidates" implementation plan
+
+```markdown
+@backend-developer Review implementation plan: @docs/get_position_candidates.plan.md 
+```
+
+---
+
+# 5) Develop "Get Posiition Candidates"
+
+```markdown
+/develop-backend @docs/get_position_candidates.plan.md 
+```
